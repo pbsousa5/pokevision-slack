@@ -271,6 +271,23 @@
     }
 
     /**
+     * Log the specified message to the console, prefixed with the current time.
+     *
+     * @param {*}       message
+     * @param {string=} logMethod - One of: "error", "group", "groupCollapsed", "info", "log", "warn"
+     * @see   developer.mozilla.org/en-US/docs/Web/API/Console
+     */
+    function logWithTime(message, logMethod) {
+
+        if (!isString(logMethod)) {
+            logMethod = 'log';
+        }
+
+        console[logMethod]('[' + formatCurrentTime() + '] ' + message);
+
+    }
+
+    /**
      * Is the specified Slack webhook URL valid?
      *
      * @param  {*} url
