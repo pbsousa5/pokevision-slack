@@ -349,6 +349,8 @@
      */
     function sendSlackNotification(message) {
 
+        logWithTime('Sending Slack notification:\n' + message, 'info');
+
         var jsonPayload = JSON.stringify({
             text: message
         });
@@ -356,8 +358,9 @@
         if (isSlackWebhookUrlValid(slackWebhookUrl)) {
             $.post(slackWebhookUrl, jsonPayload);
         } else {
-            console.error(
-                'Cannot send Slack notification: invalid or missing Slack webhook URL: ' + slackWebhookUrl
+            logWithTime(
+                'Cannot send Slack notification: invalid or missing Slack webhook URL: ' + slackWebhookUrl,
+                'error'
             );
         }
 
@@ -368,7 +371,7 @@
      */
     function main() {
 
-        console.log(formatCurrentTime() + ' main()');
+        logWithTime('main()');
 
         var nearbyPokemon = [];
 
@@ -411,8 +414,6 @@
 
             var message = messageLines.join('\n');
 
-            console.log(message);
-
             sendSlackNotification(message);
 
         }
@@ -432,7 +433,7 @@
 
     App.request = function (url, successCallback, errorCallback) {
 
-        console.log('App.request(' + url + ')');
+        logWithTime('App.request(' + url + ')');
 
         var newSuccessCallback = function (successData) {
 
@@ -449,10 +450,9 @@
 
                 apiErrorCounter++;
 
-                console.log('apiErrorCounter = ' + apiErrorCounter);
+                logWithTime('apiErrorCounter = ' + apiErrorCounter + ' (' + errorMessage + ')', 'warn');
 
                 if (apiErrorCounter === API_DOWN_THRESHOLD) {
-                    console.log('PokeVision is down');
                     sendSlackNotification(
                         "PokeVision is down :crying_cat_face: Check https://twitter.com/pokevisiongo"
                     );
@@ -461,7 +461,6 @@
             } else {
 
                 if (apiErrorCounter >= API_DOWN_THRESHOLD) {
-                    console.log('PokeVision is up');
                     sendSlackNotification("PokeVision is back up. Go catch 'em all! :smiley_cat:");
                 }
 
@@ -491,7 +490,7 @@
 
     setInterval(
         function () {
-            console.log(formatCurrentTime() + ' Clicking home-map-scan');
+            logWithTime('Clicking home-map-scan');
             $('.home-map-scan').trigger('click');
         },
         INTERVAL_POKEVISION_BUTTON * 1000
