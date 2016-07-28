@@ -232,6 +232,18 @@
     /*----- Functions -----*/
 
     /**
+     * Is the specified value a string?
+     *
+     * @param  {*} value
+     * @return {boolean}
+     */
+    function isString(value) {
+
+        return (typeof value === 'string');
+
+    }
+
+    /**
      * Convert an angle from degrees to radians.
      *
      * @param  {number} deg
@@ -266,7 +278,7 @@
      */
     function isSlackWebhookUrlValid(url) {
 
-        if (typeof url !== 'string') {
+        if (!isString(url)) {
             return false;
         }
 
